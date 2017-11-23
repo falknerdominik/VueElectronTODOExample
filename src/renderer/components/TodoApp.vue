@@ -26,10 +26,6 @@
 </template>
 
 <script>
-  function refreshTodos() { 
-
-  }
-
   var data = {
     todos: [],
     newTodo: '',
