@@ -3,10 +3,14 @@
   <header>
       <h1>todos</h1>
       <!-- input for todo -->
-      <input class="userinput" autofocus autocomplete="off"
-      placeholder="What needs to be done?"
-      v-model="newTodo"
-      @keyup.enter="createTodo">
+      <input
+        class="userinput" autofocus autocomplete="off"
+        placeholder="What needs to be done?"
+        v-model="newTodo"
+        @keyup.enter="createTodo"
+      >
+      <el-button class="btn-settings" @click="showSettings">...</el-button>
+      <settings-dialogue ref="settingsDialogue"></settings-dialogue>
   </header>
 
     <main v-show="todos.length" v-cloak>
@@ -26,6 +30,8 @@
 </template>
 
 <script>
+  import SettingsDialogue from './Dialogue/SettingsDialogue';
+
   var data = {
     todos: [],
     newTodo: '',
@@ -38,9 +44,9 @@
 
   export default {
     name: 'todoapp',
-    // components: { SystemInformation },
+    components: { SettingsDialogue },
     created: function() {
-        this.$http({ 
+        this.$http({
             url: this.endpoint,
             method: "GET"
         })
@@ -48,14 +54,14 @@
           .catch((err) => console.error(err));
     },
 
-    data: function() { 
-      data.endpoint = "http://" + data.config.host + ":" + data.config.port + data.config.path; 
+    data: function() {
+      data.endpoint = "http://" + data.config.host + ":" + data.config.port + data.config.path;
       return data;
     },
 
     methods: {
       makeRequest(method = "GET", query = "") {
-        return this.$http({ 
+        return this.$http({
             url: this.endpoint + query,
             method: method
         });
@@ -68,6 +74,10 @@
             this.makeRequest().then((res) => this.todos = res.data);
             this.newTodo = '';
           });
+      },
+
+      showSettings() {
+        this.$refs.settingsDialogue.show();
       },
 
       updateTodo(todo) {
@@ -139,14 +149,14 @@ ul.todo-list {
 }
 
 .view .button {
-  background: rgb(249, 249, 249) linear-gradient(rgb(249, 249, 249) 5%, rgb(233, 233, 233) 100%) repeat scroll 0% 0%; 
-  border: 1px solid rgb(220, 220, 220); 
-  display: block; cursor: pointer; 
-  color: rgb(102, 102, 102); 
-  font-family: Arial; 
-  font-size: 12px; 
-  font-weight: bold; 
-  padding: 6px 12px; 
+  background: rgb(249, 249, 249) linear-gradient(rgb(249, 249, 249) 5%, rgb(233, 233, 233) 100%) repeat scroll 0% 0%;
+  border: 1px solid rgb(220, 220, 220);
+  display: block; cursor: pointer;
+  color: rgb(102, 102, 102);
+  font-family: Arial;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 6px 12px;
   text-decoration: none;
 }
 
@@ -166,6 +176,12 @@ input.userinput {
 
 input:focus {
   outline: 0;
+}
+
+.btn-settings {
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }
 
 </style>
